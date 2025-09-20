@@ -1,20 +1,57 @@
 <script>
 import { useAuth } from '@/composables/useAuth'
+import { useBook } from '@/composables/useBook'
 import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import BookAdd from '@/components/BookAdd.vue'
 
 export default {
   name: 'DashboardView',
+  components: {
+    BookAdd
+  },
   setup() {
     const { user, logout } = useAuth()
+    const { books, reviews, fetchBooks, fetchReviews } = useBook()
     const router = useRouter()
+
+    fetchBooks()
+    fetchReviews()
 
     const handleLogout = async () => {
       await logout()
       router.push('/login')
     }
 
+    // 도서 통계 계산
+    const bookStats = computed(() => {
+      if (!books.value || books.value.length === 0) {
+        return {
+          total: 0,
+          reading: 0,
+          completed: 0,
+          reviewed: 0,
+          favorite: 0
+        }
+      }
+
+      // 리뷰된 도서의 고유 book_id 개수 계산
+      const reviewedBookIds = new Set(reviews.value?.map(review => review.book_id) || [])
+
+      return {
+        total: books.value.length,
+        reading: books.value.filter(book => !book.complated_at).length,
+        completed: books.value.filter(book => book.complated_at).length,
+        reviewed: reviewedBookIds.size,
+        favorite: Math.floor(books.value.length * 0.3)  // 임시로 30%로 가정 (즐겨찾기 API 필요)
+      }
+    })
+
     return {
       user,
+      books,
+      reviews,
+      bookStats,
       handleLogout,
     }
   },
@@ -27,10 +64,10 @@ export default {
     <header class="bg-white shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center">
-          <h1 class="text-3xl font-bold tracking-tight text-gray-900">우리집 도서관 대시보드</h1>
+          <h1 class="text-3xl font-bold tracking-tight text-gray-900">우리집 도서관</h1>
           <div class="flex items-center space-x-4">
             <span class="text-gray-700">
-              환영합니다, {{ user?.name || user?.email || '사용자' }}님
+              환영합니다, {{ user?.nick_name || user?.email || '사용자' }}님
             </span>
             <button
               @click="handleLogout"
@@ -69,7 +106,7 @@ export default {
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">등록된 총 도서 수</dt>
-                    <dd class="text-lg font-medium text-gray-900">142권</dd>
+                    <dd class="text-lg font-medium text-gray-900">{{ bookStats.total }}권</dd>
                   </dl>
                 </div>
               </div>
@@ -98,7 +135,7 @@ export default {
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">읽고 있는 중인 도서</dt>
-                    <dd class="text-lg font-medium text-gray-900">7권</dd>
+                    <dd class="text-lg font-medium text-gray-900">{{ bookStats.reading }}권</dd>
                   </dl>
                 </div>
               </div>
@@ -126,7 +163,7 @@ export default {
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">다 읽은 도서</dt>
-                    <dd class="text-lg font-medium text-gray-900">85권</dd>
+                    <dd class="text-lg font-medium text-gray-900">{{ bookStats.completed }}권</dd>
                   </dl>
                 </div>
               </div>
@@ -155,7 +192,7 @@ export default {
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">리뷰한 도서</dt>
-                    <dd class="text-lg font-medium text-gray-900">42권</dd>
+                    <dd class="text-lg font-medium text-gray-900">{{ bookStats.reviewed }}권</dd>
                   </dl>
                 </div>
               </div>
@@ -183,7 +220,7 @@ export default {
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">즐겨찾기</dt>
-                    <dd class="text-lg font-medium text-gray-900">23권</dd>
+                    <dd class="text-lg font-medium text-gray-900">{{ bookStats.favorite }}권</dd>
                   </dl>
                 </div>
               </div>
@@ -191,14 +228,40 @@ export default {
           </div>
         </div>
 
-        <!-- 최근 활동 -->
+        <!-- 도서 추가 -->
         <div class="mt-8">
+          <BookAdd />
+        </div>
+
+        <!-- 최근 리뷰 -->
+        <div class="mt-8" v-if="reviews && reviews.length > 0">
           <div class="bg-white shadow rounded-lg">
             <div class="px-4 py-5 sm:p-6">
-              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">최근 활동</h3>
-              <div class="text-gray-500">
-                <p>도서관 시스템이 성공적으로 연결되었습니다!</p>
-                <p class="mt-2">세션 기반 인증이 정상적으로 작동 중입니다.</p>
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">최근 리뷰</h3>
+              <div class="space-y-4">
+                <div
+                  v-for="review in reviews.slice(0, 3)"
+                  :key="review.id"
+                  class="border-l-4 border-blue-400 pl-4"
+                >
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm font-medium text-gray-900">평점:</span>
+                      <div class="flex items-center">
+                        <span v-for="n in 5" :key="n" class="text-yellow-400">
+                          {{ n <= review.rating ? '★' : '☆' }}
+                        </span>
+                        <span class="ml-1 text-sm text-gray-600">({{ review.rating }}/5)</span>
+                      </div>
+                    </div>
+                    <span class="text-xs text-gray-500">
+                      {{ new Date(review.created_at).toLocaleDateString('ko-KR') }}
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-700 line-clamp-3">
+                    {{ review.content }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
