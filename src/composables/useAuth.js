@@ -30,7 +30,7 @@ export function useAuth() {
   const login = async (email, password) => {
     isLoading.value = true
     try {
-      const response = await api.post('/api/users/login', { email, password })
+      const response = await api.post('/api/users/signin', { email, password })
       user.value = response.data.user || response.data // 백엔드 응답 구조에 따라 조정
       return { success: true, data: response.data }
     } catch (error) {
@@ -47,7 +47,7 @@ export function useAuth() {
   const logout = async () => {
     isLoading.value = true
     try {
-      await api.post('/api/logout')
+      await api.post('/api/signout')
     } catch (error) {
       console.error('로그아웃 요청 실패:', error)
     } finally {
@@ -60,7 +60,7 @@ export function useAuth() {
   const register = async (userData) => {
     isLoading.value = true
     try {
-      const response = await api.post('/api/register', userData)
+      const response = await api.post('/api/signup', userData)
       user.value = response.data.user || response.data
       return { success: true, data: response.data }
     } catch (error) {
