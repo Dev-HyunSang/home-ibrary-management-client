@@ -60,7 +60,7 @@ export function useAuth() {
   const register = async (userData) => {
     isLoading.value = true
     try {
-      const response = await api.post('/api/signup', userData)
+      const response = await api.post('/api/users/signup', userData)
       user.value = response.data.user || response.data
       return { success: true, data: response.data }
     } catch (error) {

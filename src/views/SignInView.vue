@@ -113,8 +113,8 @@ export default {
       </form>
 
       <p class="mt-10 text-center text-sm/6 text-gray-400">
-        아직 비밀번호가 없으신가요?
-        <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300">회원가입 하기</a>
+        아직 계정이 없으신가요?
+        <router-link to="/register" class="font-semibold text-indigo-400 hover:text-indigo-300">회원가입 하기</router-link>
       </p>
     </div>
   </div>

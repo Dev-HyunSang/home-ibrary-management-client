@@ -5,17 +5,17 @@ const routes = [
   {
     name: 'index',
     path: '/',
-    redirect: '/login',
+    redirect: '/signin',
   },
   {
-    name: 'Login',
-    path: '/login',
+    name: 'SignIn',
+    path: '/signin',
     component: () => import('@/views/SignInView.vue'),
   },
   {
-    name: 'Register',
-    path: '/register',
-    component: () => import('@/views/RegisterView.vue'),
+    name: 'SignUp',
+    path: '/signup',
+    component: () => import('@/views/SignUpView.vue'),
   },
   {
     name: 'ForgotPassword',
