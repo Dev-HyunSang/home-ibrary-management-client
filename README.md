@@ -1,29 +1,38 @@
-# home-library
+# Home Library Management Client
+- 기본적인 디자인은 이후 기술 개발 등은 Claude Code의 도움을 받았습니다.
 
-This template should help get you started developing with Vue 3 in Vite.
+## 사용한 기술
+- Vite(Vue.js)
+    - Router
+    - Axios
+    - Tailwind CSS
 
-## Recommended IDE Setup
+## 개발된 기능
+- 회원가입
+- 로그인
+- 로그아웃
+- 서적 등록
+    - 직접 입력 가능
+    - ISBN 바코드를 통한 검색 및 자동 입력(ISBN 직접 입력 가능)
+- 서적 불러오기
+    - 등록일 불러옴.
+    - 아직 백엔드 단에서의 읽는 상태에 대한 코드 미작성 / 추후 기능 개발
+- 서적 삭제
+- 리뷰 불러오기
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### 개발 예정 기능
 
-## Customize configuration
+#### 서적
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- 즐겨찾기 등록
+    - 기존 서적 불러오기 화면에서 손쉽게 즐겨찾기 할 수 있도록 기능 개발
+- 즐겨찾기 목록 불러오기
+    - 백엔드 기능 개발 필요
+- 즐겨찾기 삭제
+    - 백엔드 기능 개발 필요
 
-## Project Setup
+#### 리뷰
 
-```sh
-yarn
-```
+- 리뷰 등록
+- 리뷰 삭제
 
-### Compile and Hot-Reload for Development
-
-```sh
-yarn dev
-```
-
-### Compile and Minify for Production
-
-```sh
-yarn build
-```
