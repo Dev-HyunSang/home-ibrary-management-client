@@ -43,15 +43,15 @@ export default {
 </script>
 
 <template>
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="flex min-h-full flex-col justify-center px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h1 class="text-center text-2xl text-gray-500 font-bold tracking-tight">
+      <h1 class="text-center text-xl sm:text-2xl text-gray-500 font-bold tracking-tight leading-tight">
         어서오세요. 우리집 도서관입니다.
       </h1>
-      <h2 class="mt-5 text-center text-2xl/9 font-bold tracking-tight text-gray-500">로그인</h2>
+      <h2 class="mt-4 sm:mt-5 text-center text-xl sm:text-2xl/9 font-bold tracking-tight text-gray-500">로그인</h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="mt-8 sm:mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <!-- 에러 메시지 표시 -->
       <div
         v-if="errorMessage"
@@ -60,7 +60,7 @@ export default {
         {{ errorMessage }}
       </div>
 
-      <form @submit.prevent="submitLogin" class="space-y-6">
+      <form @submit.prevent="submitLogin" class="space-y-5 sm:space-y-6">
         <div>
           <label for="email" class="block text-sm/6 font-medium text-gray-500">Email address</label>
           <div class="mt-2">
@@ -81,9 +81,8 @@ export default {
           <div class="flex items-center justify-between">
             <label for="password" class="block text-sm/6 font-medium text-gray-500">Password</label>
             <div class="text-sm">
-              <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300"
-                >비밀번호을 잊어버리셨나요?</a
-              >
+              <router-link to="/forgot-password" class="font-semibold text-indigo-400 hover:text-indigo-300"
+                >비밀번호를 잊어버리셨나요?</router-link>
             </div>
           </div>
           <div class="mt-2">
@@ -112,9 +111,9 @@ export default {
         </div>
       </form>
 
-      <p class="mt-10 text-center text-sm/6 text-gray-400">
+      <p class="mt-8 sm:mt-10 text-center text-sm/6 text-gray-400">
         아직 계정이 없으신가요?
-        <router-link to="/register" class="font-semibold text-indigo-400 hover:text-indigo-300">회원가입 하기</router-link>
+        <router-link to="/signup" class="font-semibold text-indigo-400 hover:text-indigo-300">회원가입 하기</router-link>
       </p>
     </div>
   </div>

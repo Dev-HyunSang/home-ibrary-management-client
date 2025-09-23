@@ -4,11 +4,13 @@ import { useBook } from '@/composables/useBook'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import BookAdd from '@/components/BookAdd.vue'
+import ReviewList from '@/components/ReviewList.vue'
 
 export default {
   name: 'DashboardView',
   components: {
-    BookAdd
+    BookAdd,
+    ReviewList
   },
   setup() {
     const { user, logout } = useAuth()
@@ -20,7 +22,7 @@ export default {
 
     const handleLogout = async () => {
       await logout()
-      router.push('/login')
+      router.push('/signin')
     }
 
     // 도서 통계 계산
@@ -62,16 +64,16 @@ export default {
   <div class="min-h-screen bg-gray-50">
     <!-- 헤더 -->
     <header class="bg-white shadow">
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center">
-          <h1 class="text-3xl font-bold tracking-tight text-gray-900">우리집 도서관</h1>
-          <div class="flex items-center space-x-4">
-            <span class="text-gray-700">
+      <div class="mx-auto max-w-7xl px-4 py-4 sm:py-6 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">우리집 도서관</h1>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+            <span class="text-sm sm:text-base text-gray-700 truncate max-w-full sm:max-w-none">
               환영합니다, {{ user?.nick_name || user?.email || '사용자' }}님
             </span>
             <button
               @click="handleLogout"
-              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+              class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 sm:px-4 rounded-md text-sm font-medium w-full sm:w-auto"
             >
               로그아웃
             </button>
@@ -81,37 +83,44 @@ export default {
     </header>
 
     <!-- 메인 콘텐츠 -->
-    <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-      <div class="px-4 py-6 sm:px-0">
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <main class="mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8">
+      <div class="px-4 py-4 sm:py-6 sm:px-0">
+        <div class="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <!-- 도서 통계 카드 -->
-          <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <svg
-                    class="h-6 w-6 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt class="text-sm font-medium text-gray-500 truncate">등록된 총 도서 수</dt>
-                    <dd class="text-lg font-medium text-gray-900">{{ bookStats.total }}권</dd>
-                  </dl>
+          <router-link to="/books" class="block">
+            <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer">
+              <div class="p-5">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <svg
+                      class="h-6 w-6 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
+                      />
+                    </svg>
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="text-sm font-medium text-gray-500 truncate">등록된 총 도서 수</dt>
+                      <dd class="text-lg font-medium text-gray-900">{{ bookStats.total }}권</dd>
+                    </dl>
+                  </div>
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </router-link>
 
           <!-- 대출 중인 도서 -->
           <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -229,42 +238,13 @@ export default {
         </div>
 
         <!-- 도서 추가 -->
-        <div class="mt-8">
+        <div class="mt-6 sm:mt-8">
           <BookAdd />
         </div>
 
         <!-- 최근 리뷰 -->
-        <div class="mt-8" v-if="reviews && reviews.length > 0">
-          <div class="bg-white shadow rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">최근 리뷰</h3>
-              <div class="space-y-4">
-                <div
-                  v-for="review in reviews.slice(0, 3)"
-                  :key="review.id"
-                  class="border-l-4 border-blue-400 pl-4"
-                >
-                  <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                      <span class="text-sm font-medium text-gray-900">평점:</span>
-                      <div class="flex items-center">
-                        <span v-for="n in 5" :key="n" class="text-yellow-400">
-                          {{ n <= review.rating ? '★' : '☆' }}
-                        </span>
-                        <span class="ml-1 text-sm text-gray-600">({{ review.rating }}/5)</span>
-                      </div>
-                    </div>
-                    <span class="text-xs text-gray-500">
-                      {{ new Date(review.created_at).toLocaleDateString('ko-KR') }}
-                    </span>
-                  </div>
-                  <p class="text-sm text-gray-700 line-clamp-3">
-                    {{ review.content }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="mt-6 sm:mt-8">
+          <ReviewList :reviews="reviews" :limit="3" />
         </div>
       </div>
     </main>

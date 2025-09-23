@@ -70,15 +70,15 @@ export default {
 </script>
 
 <template>
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="flex min-h-full flex-col justify-center px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h1 class="text-center text-2xl text-gray-500 font-bold tracking-tight">
+      <h1 class="text-center text-xl sm:text-2xl text-gray-500 font-bold tracking-tight leading-tight">
         어서오세요. 우리집 도서관입니다.
       </h1>
-      <h2 class="mt-5 text-center text-2xl/9 font-bold tracking-tight text-gray-500">회원가입</h2>
+      <h2 class="mt-4 sm:mt-5 text-center text-xl sm:text-2xl/9 font-bold tracking-tight text-gray-500">회원가입</h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="mt-8 sm:mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <div
         v-if="errorMessage"
         class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded"
@@ -86,7 +86,7 @@ export default {
         {{ errorMessage }}
       </div>
 
-      <form @submit.prevent="submitRegister" class="space-y-6">
+      <form @submit.prevent="submitRegister" class="space-y-5 sm:space-y-6">
         <div>
           <label for="name" class="block text-sm/6 font-medium text-gray-500">닉네임</label>
           <div class="mt-2">
@@ -189,9 +189,9 @@ export default {
         </div>
       </form>
 
-      <p class="mt-10 text-center text-sm/6 text-gray-400">
+      <p class="mt-8 sm:mt-10 text-center text-sm/6 text-gray-400">
         이미 계정이 있으신가요?
-        <router-link to="/login" class="font-semibold text-indigo-400 hover:text-indigo-300">로그인 하기</router-link>
+        <router-link to="/signin" class="font-semibold text-indigo-400 hover:text-indigo-300">로그인 하기</router-link>
       </p>
     </div>
   </div>

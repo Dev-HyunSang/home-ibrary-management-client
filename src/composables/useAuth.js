@@ -9,16 +9,24 @@ export function useAuth() {
   // 로그인 상태 확인
   const isLoggedIn = computed(() => !!user.value)
 
-  // 현재 사용자 정보 확인 (세션 검증)
+  // 현재 사용자 정보 확인 (토큰 검증)
   const checkAuth = async () => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return false
+    }
+
     isLoading.value = true
     try {
       const response = await api.post('/api/users/me') // 또는 /api/user, /api/profile
       user.value = response.data
       return true
     } catch (error) {
-      if (error.response && error.response.status !== 401) {
-        console.error('사용자가 로그인을 하지 않았습니다.')
+      if (error.response && error.response.status === 401) {
+        // 토큰이 만료된 경우 제거
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        user.value = null
       }
       return false
     } finally {
@@ -31,7 +39,14 @@ export function useAuth() {
     isLoading.value = true
     try {
       const response = await api.post('/api/users/signin', { email, password })
-      user.value = response.data.user || response.data // 백엔드 응답 구조에 따라 조정
+
+      // JWT 토큰 저장
+      const { access_token, refresh_token, user: userData } = response.data
+      localStorage.setItem('access_token', access_token)
+      localStorage.setItem('refresh_token', refresh_token)
+
+      // 사용자 정보 저장
+      user.value = userData
       return { success: true, data: response.data }
     } catch (error) {
       return {
@@ -47,10 +62,13 @@ export function useAuth() {
   const logout = async () => {
     isLoading.value = true
     try {
-      await api.post('/api/signout')
+      await api.post('/api/users/signout')
     } catch (error) {
       console.error('로그아웃 요청 실패:', error)
     } finally {
+      // 토큰 제거
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
       user.value = null
       isLoading.value = false
     }

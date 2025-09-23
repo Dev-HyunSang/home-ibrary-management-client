@@ -20,13 +20,19 @@ const routes = [
   {
     name: 'ForgotPassword',
     path: '/forgot-password',
-    // component: () => import('@/views/ForgotPasswordView.vue'),
+    component: () => import('@/views/ForgotPasswordView.vue'),
   },
   {
     name: 'Dashboard',
     path: '/dashboard',
     component: () => import('@/views/DashboardView.vue'),
     meta: { requiresAuth: true }, // 인증이 필요한 페이지 표시
+  },
+  {
+    name: 'BookList',
+    path: '/books',
+    component: () => import('@/views/BookListView.vue'),
+    meta: { requiresAuth: true },
   },
 ]
 
@@ -47,14 +53,14 @@ router.beforeEach(async (to, from, next) => {
 
       if (!isAuthenticated) {
         // 인증되지 않음 - 로그인 페이지로 리다이렉트
-        next('/login')
+        next('/signin')
         return
       }
     }
   }
 
   // 로그인 페이지인데 이미 로그인된 경우
-  if (to.path === '/login' && isLoggedIn.value) {
+  if (to.path === '/signin' && isLoggedIn.value) {
     next('/dashboard')
     return
   }

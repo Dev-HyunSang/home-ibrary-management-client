@@ -1,23 +1,30 @@
 import axios from 'axios'
 
-// 백엔드 API 베이스 URL (필요에 따라 수정하세요)
-const API_BASE_URL = 'http://localhost:3000'
-// 또는 실제 백엔드 URL
+// 백엔드 API 베이스 URL - 환경에 따라 동적으로 설정
+const API_BASE_URL = process.env.NODE_ENV === 'development'
+  ? `http://${window.location.hostname}:3000`  // 개발환경: 현재 접속 호스트의 3000포트
+  : 'http://localhost:3000'  // 프로덕션: 실제 서버 URL로 변경 필요
 
 // axios 인스턴스 생성
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // 세션 쿠키를 자동으로 포함
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// 요청 인터셉터
+// 요청 인터셉터 - JWT 토큰 자동 추가
 api.interceptors.request.use(
   (config) => {
     console.log('API 요청:', config.method?.toUpperCase(), config.url)
+
+    // localStorage에서 토큰 가져오기
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
     return config
   },
   (error) => {

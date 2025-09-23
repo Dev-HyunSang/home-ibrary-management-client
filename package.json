@@ -8,16 +8,19 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:https": "vite --https --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write src/"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
+    "@zxing/library": "^0.21.3",
     "axios": "^1.12.2",
     "quagga": "^0.12.1",
     "tailwindcss": "^4.1.13",
     "vue": "^3.5.18",
+    "vue-barcode-reader": "^1.0.3",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
